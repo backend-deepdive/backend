@@ -1,0 +1,59 @@
+version: '3'
+
+services:
+  mysqldb:
+    container_name: mysqldb
+    image: mysql
+    ports:
+      - "3306:3306"
+    environment:
+      TZ: Asia/Seoul
+      MYSQL_DATABASE: stockcoin
+      MYSQL_ROOT_PASSWORD: stockcoin
+      MYSQL_ROOT_HOST: "%"
+    volumes:
+      - ./backup:/var/lib/mysql
+    networks:
+      - default
+      - app-tier
+
+#  backend:
+#    container_name: backend
+#    build:
+#      context: .
+#    restart: always
+#    depends_on:
+#      - mysqldb
+#    ports:
+#      - "8080:8080"
+#    environment:
+#      SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/stockcoin?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+#      SPRING_DATASOURCE_USERNAME: root
+#      SPRING_DATASOURCE_PASSWORD: stockcoin
+#    networks:
+#      - default
+#      - app-tier
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    restart: on-failure
+    ports:
+      - "9090:9090"
+    networks:
+      - app-tier
+    volumes:
+      - ./prometheus.yml/prometheus.yml.yml:/etc/prometheus.yml/prometheus.yml.yml
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    restart: on-failure
+    ports:
+      - "3000:3000"
+    networks:
+      - app-tier
+
+networks:
+  app-tier:
+    driver: bridge

@@ -1,0 +1,9 @@
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    implementation project(':domain-jpa')
+}
+
+bootJar {enabled = false}
+jar {enabled = true}

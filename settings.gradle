@@ -1,0 +1,4 @@
+rootProject.name = 'stockcoin'
+include 'application-api'
+include 'domain-jpa'
+
