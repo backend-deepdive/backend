@@ -1,6 +1,24 @@
 version: '3'
 
 services:
+#  backend:
+#    container_name: backend
+#    build:
+#      context: .
+#    restart: always
+#    depends_on:
+#      - mysqldb
+#      - kafka
+#    ports:
+#      - "8080:8080"
+#    environment:
+#      SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/stockcoin?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+#      SPRING_DATASOURCE_USERNAME: root
+#      SPRING_DATASOURCE_PASSWORD: stockcoin
+#    networks:
+#      - default
+#      - app-tier
+
   mysqldb:
     container_name: mysqldb
     image: mysql
@@ -16,23 +34,6 @@ services:
     networks:
       - default
       - app-tier
-
-#  backend:
-#    container_name: backend
-#    build:
-#      context: .
-#    restart: always
-#    depends_on:
-#      - mysqldb
-#    ports:
-#      - "8080:8080"
-#    environment:
-#      SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/stockcoin?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
-#      SPRING_DATASOURCE_USERNAME: root
-#      SPRING_DATASOURCE_PASSWORD: stockcoin
-#    networks:
-#      - default
-#      - app-tier
 
   prometheus:
     image: prom/prometheus
@@ -51,6 +52,76 @@ services:
     restart: on-failure
     ports:
       - "3000:3000"
+    networks:
+      - app-tier
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper
+    container_name: zookeeper
+    environment:
+      - ZOOKEEPER_CLIENT_PORT=2181
+    ports:
+      - 2181:2181
+    networks:
+      - app-tier
+
+  kafka:
+    image: confluentinc/cp-kafka
+    ports:
+      - 9092:9092
+    container_name: kafka-broker1
+    restart: on-failure
+    environment:
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka1:9092
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      KAFKA_ADVERTISED_HOST_NAME: kafka1
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_CREATE_TOPICS: dresses:1:1,ratings:1:1
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      - zookeeper
+    networks:
+      - app-tier
+
+  kafka2:
+    image: confluentinc/cp-kafka
+    ports:
+      - 9093:9092
+    container_name: kafka-broker2
+    restart: on-failure
+    environment:
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka2:9092
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      KAFKA_ADVERTISED_HOST_NAME: kafka2
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_CREATE_TOPICS: dresses:1:1,ratings:1:1
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      - zookeeper
+    networks:
+      - app-tier
+
+  kafka3:
+    image: confluentinc/cp-kafka
+    ports:
+      - 9094:9092
+    container_name: kafka-broker3
+    restart: on-failure
+    environment:
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka3:9092
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      KAFKA_ADVERTISED_HOST_NAME: kafka3
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_CREATE_TOPICS: dresses:1:1,ratings:1:1
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      - zookeeper
     networks:
       - app-tier
 
