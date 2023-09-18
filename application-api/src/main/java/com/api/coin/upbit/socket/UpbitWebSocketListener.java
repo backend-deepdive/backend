@@ -1,8 +1,8 @@
-package com.api.socket.upbit;
+package com.api.coin.upbit.socket;
 
 
-import com.api.socket.util.enums.SiseType;
-import com.api.socket.util.json.JsonUtil;
+import com.api.global.util.enums.SiseType;
+import com.api.global.util.json.JsonUtil;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.Data;
 import okhttp3.Response;

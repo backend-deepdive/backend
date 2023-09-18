@@ -1,4 +1,4 @@
-package com.api.socket.util.enums;
+package com.api.global.util.enums;
 
 
 import com.fasterxml.jackson.core.JsonGenerator;

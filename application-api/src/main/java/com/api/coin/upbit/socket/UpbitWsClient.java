@@ -1,6 +1,6 @@
-package com.api.socket.upbit;
+package com.api.coin.upbit.socket;
 
-import com.api.socket.util.enums.SiseType;
+import com.api.global.util.enums.SiseType;
 import okhttp3.ConnectionPool;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;

@@ -1,8 +1,8 @@
-package com.api.socket.util.json;
+package com.api.global.util.json;
 
 
-import com.api.socket.util.enums.EnumInterface;
-import com.api.socket.util.enums.EnumSerializer;
+import com.api.global.util.enums.EnumInterface;
+import com.api.global.util.enums.EnumSerializer;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
