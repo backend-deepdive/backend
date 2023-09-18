@@ -1,6 +1,5 @@
 package com.api.global.advice;
 
-import com.api.global.advice.ErrorCode;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;

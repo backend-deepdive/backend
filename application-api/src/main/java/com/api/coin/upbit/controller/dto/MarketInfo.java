@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Setter;
 
 @Setter
-public class RequestMarket {
+public class MarketInfo {
     @JsonProperty("market")
     private String market;
     @JsonProperty("korean_name")
