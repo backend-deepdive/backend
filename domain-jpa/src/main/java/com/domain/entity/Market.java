@@ -1,21 +1,28 @@
 package com.domain.entity;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
-@Getter
-@Setter
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 public class Market {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(nullable = false)
+    private String market;
+    @Column(nullable = false)
+    private String koreanName;
+    @Column(nullable = false)
+    private String englishName;
 
+    @Builder
+    public Market(String market, String koreanName, String englishName) {
+        this.market = market;
+        this.koreanName = koreanName;
+        this.englishName = englishName;
+    }
 }

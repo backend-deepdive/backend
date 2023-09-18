@@ -2,3 +2,5 @@ rootProject.name = 'stockcoin'
 include 'application-api'
 include 'application-worker'
 include 'domain-jpa'
+include 'application'
+
