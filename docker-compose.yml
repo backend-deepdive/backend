@@ -1,23 +1,25 @@
 version: '3'
 
 services:
-#  backend:
-#    container_name: backend
-#    build:
-#      context: .
-#    restart: always
-#    depends_on:
-#      - mysqldb
-#      - kafka
-#    ports:
-#      - "8080:8080"
-#    environment:
-#      SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/stockcoin?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
-#      SPRING_DATASOURCE_USERNAME: root
-#      SPRING_DATASOURCE_PASSWORD: stockcoin
-#    networks:
-#      - default
-#      - app-tier
+  backend:
+    container_name: backend
+    build:
+      context: .
+    restart: always
+    depends_on:
+      - mysqldb
+      - kafka1
+      - kafka2
+      - kafka3
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/stockcoin?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: stockcoin
+    networks:
+      - default
+      - app-tier
 
   mysqldb:
     container_name: mysqldb
@@ -30,7 +32,7 @@ services:
       MYSQL_ROOT_PASSWORD: stockcoin
       MYSQL_ROOT_HOST: "%"
     volumes:
-      - ./backup:/var/lib/mysql
+      - ./backup-mysqldb:/var/lib/mysql
     networks:
       - default
       - app-tier
@@ -44,7 +46,7 @@ services:
     networks:
       - app-tier
     volumes:
-      - ./prometheus.yml/prometheus.yml.yml:/etc/prometheus.yml/prometheus.yml.yml
+      - ./backup-prometheus:/etc/prometheus.yml/prometheus.yml.yml
 
   grafana:
     image: grafana/grafana
@@ -65,11 +67,11 @@ services:
     networks:
       - app-tier
 
-  kafka:
+  kafka1:
     image: confluentinc/cp-kafka
     ports:
       - 9092:9092
-    container_name: kafka-broker1
+    container_name: kafka1
     restart: on-failure
     environment:
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka1:9092
@@ -89,7 +91,7 @@ services:
     image: confluentinc/cp-kafka
     ports:
       - 9093:9092
-    container_name: kafka-broker2
+    container_name: kafka2
     restart: on-failure
     environment:
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka2:9092
@@ -109,7 +111,7 @@ services:
     image: confluentinc/cp-kafka
     ports:
       - 9094:9092
-    container_name: kafka-broker3
+    container_name: kafka3
     restart: on-failure
     environment:
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka3:9092
