@@ -1,2 +1,4 @@
-package com.domain.entity;public class Ticker {
+package com.domain.entity;
+
+public class Ticker {
 }

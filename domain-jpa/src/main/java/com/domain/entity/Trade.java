@@ -1,2 +1,4 @@
-package com.domain.entity;public class Trade {
+package com.domain.entity;
+
+public class Trade {
 }

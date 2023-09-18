@@ -1,2 +1,4 @@
-package com.domain.entity;public class Overbook {
+package com.domain.entity;
+
+public class Overbook {
 }
