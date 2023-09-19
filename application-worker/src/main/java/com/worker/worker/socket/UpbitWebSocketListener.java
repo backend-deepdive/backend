@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.worker.global.util.enums.SiseType;
 import com.worker.global.util.json.JsonUtil;
 import com.worker.worker.producer.KafkaProducer;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import okhttp3.Response;
 import okhttp3.WebSocket;
@@ -13,6 +12,7 @@ import okhttp3.WebSocketListener;
 import okio.ByteString;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
@@ -21,13 +21,17 @@ import java.util.List;
 import java.util.UUID;
 
 @Component
-@AllArgsConstructor
 public class UpbitWebSocketListener extends WebSocketListener {
 
     private static final int NORMAL_CLOSURE_STATUS = 1000;
-    private final KafkaProducer producer;
     private String json;
     private SiseType siseType;
+    private final KafkaProducer producer;
+
+    @Autowired
+    public UpbitWebSocketListener(KafkaProducer producer) {
+        this.producer = producer;
+    }
 
     @Override
     public void onClosed(@NotNull WebSocket webSocket, int code, @NotNull String reason) {
