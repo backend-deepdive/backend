@@ -1,4 +1,4 @@
-package com.worker.worker.socket;
+package com.worker.worker.socket.upbit;
 
 import com.worker.global.util.enums.SiseType;
 import okhttp3.ConnectionPool;

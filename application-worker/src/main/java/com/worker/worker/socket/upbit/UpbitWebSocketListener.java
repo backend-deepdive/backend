@@ -1,4 +1,4 @@
-package com.worker.worker.socket;
+package com.worker.worker.socket.upbit;
 
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -53,7 +53,7 @@ public class UpbitWebSocketListener extends WebSocketListener {
     @Override
     public void onMessage(@NotNull WebSocket webSocket, @NotNull String text) {
         JsonNode jsonNode = JsonUtil.fromJson(text, JsonNode.class);
-        System.out.println(jsonNode.toPrettyString());
+//        System.out.println(jsonNode.toPrettyString());
     }
 
     @Override
