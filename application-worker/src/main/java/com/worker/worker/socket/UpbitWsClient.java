@@ -1,10 +1,11 @@
-package com.api.coin.upbit.socket;
+package com.worker.worker.socket;
 
-import com.api.global.util.enums.SiseType;
+import com.worker.global.util.enums.SiseType;
 import okhttp3.ConnectionPool;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.WebSocket;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,9 +17,13 @@ import java.util.concurrent.TimeUnit;
 public class UpbitWsClient {
     private final OkHttpClient client;
     private WebSocket webSocket;
+    private final UpbitWebSocketListener webSocketListener;
 
-    public UpbitWsClient() {
+    @Autowired
+    public UpbitWsClient(UpbitWebSocketListener webSocketListener) {
         this.client = createHttpClientWithConnectionPool();
+        this.webSocketListener = webSocketListener;
+        connect();
     }
 
     public void connect() {
@@ -27,7 +32,6 @@ public class UpbitWsClient {
                     .url("wss://api.upbit.com/websocket/v1")
                     .build();
 
-            UpbitWebSocketListener webSocketListener = new UpbitWebSocketListener();
             webSocketListener.setParameter(SiseType.TRADE, List.of("KRW-BTC"));
             webSocket = client.newWebSocket(request, webSocketListener);
 

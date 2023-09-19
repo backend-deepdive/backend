@@ -12,5 +12,6 @@ public class KafkaConsumer {
 
     @KafkaListener(topics = "${spring.kafka.topic.name}", groupId = "${spring.kafka.consumer.group-id}")
     public void consume(HashMap<String, Object> data){
+        System.out.println(data);
     }
 }

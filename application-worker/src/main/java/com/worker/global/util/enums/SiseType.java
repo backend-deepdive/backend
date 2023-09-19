@@ -1,4 +1,4 @@
-package com.api.global.util.enums;
+package com.worker.global.util.enums;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.AllArgsConstructor;

@@ -1,7 +1,6 @@
 package com.worker.worker.producer;
 
 
-import com.worker.global.interfaces.KafkaProduceInterface;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,7 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 
 @Service
-public class KafkaProducer implements KafkaProduceInterface {
+public class KafkaProducer {
 
     @Value("${spring.kafka.topic.name}")
     private String topicName;
@@ -27,7 +26,6 @@ public class KafkaProducer implements KafkaProduceInterface {
         this.kafkaTemplate = kafkaTemplate;
     }
 
-    @Override
     public void sendMessage(HashMap<String, Object> data){
         Message<HashMap<String, Object>> message = MessageBuilder
                 .withPayload(data)

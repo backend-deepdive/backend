@@ -1,9 +1,11 @@
-package com.api.coin.upbit.socket;
+package com.worker.worker.socket;
 
 
-import com.api.global.util.enums.SiseType;
-import com.api.global.util.json.JsonUtil;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.worker.global.util.enums.SiseType;
+import com.worker.global.util.json.JsonUtil;
+import com.worker.worker.producer.KafkaProducer;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import okhttp3.Response;
 import okhttp3.WebSocket;
@@ -19,9 +21,11 @@ import java.util.List;
 import java.util.UUID;
 
 @Component
+@AllArgsConstructor
 public class UpbitWebSocketListener extends WebSocketListener {
 
     private static final int NORMAL_CLOSURE_STATUS = 1000;
+    private final KafkaProducer producer;
     private String json;
     private SiseType siseType;
 
@@ -50,8 +54,8 @@ public class UpbitWebSocketListener extends WebSocketListener {
 
     @Override
     public void onMessage(@NotNull WebSocket webSocket, @NotNull ByteString bytes) {
-        HashMap<String, Object> result = JsonUtil.fromJson(bytes.string(StandardCharsets.UTF_8), HashMap.class);
-        System.out.println(result);
+        HashMap<String, Object> message = JsonUtil.fromJson(bytes.string(StandardCharsets.UTF_8), HashMap.class);
+        producer.sendMessage(message);
     }
 
     @Override

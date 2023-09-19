@@ -3,7 +3,7 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
     implementation project(':application-api')
-//    implementation project(':application-worker')
+    implementation project(':application-worker')
 }
 
 bootJar {enabled = true}

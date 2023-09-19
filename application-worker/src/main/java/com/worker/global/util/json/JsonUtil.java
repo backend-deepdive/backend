@@ -1,8 +1,6 @@
-package com.api.global.util.json;
+package com.worker.global.util.json;
 
 
-import com.api.global.util.enums.EnumInterface;
-import com.api.global.util.enums.EnumSerializer;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,6 +8,8 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.worker.global.util.enums.EnumInterface;
+import com.worker.global.util.enums.EnumSerializer;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
