@@ -7,6 +7,8 @@ dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.20'
     annotationProcessor 'org.projectlombok:lombok'
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+
+    implementation project(':core')
 }
 
 bootJar {enabled = false}
