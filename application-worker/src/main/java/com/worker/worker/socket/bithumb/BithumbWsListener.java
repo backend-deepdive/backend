@@ -59,8 +59,11 @@ public class BithumbWsListener extends TextWebSocketHandler {
 
     @Override
     public void handleTextMessage(WebSocketSession session, TextMessage textMessage) throws JsonProcessingException {
-        JsonNode jsonNode = objectMapper.readTree(textMessage.getPayload());
-        HashMap<String, Object> message = objectMapper.convertValue(jsonNode, HashMap.class);
-        producer.sendMessage(topicName, message);
+        String payload = textMessage.getPayload();
+        if(payload.contains("status")) {
+            JsonNode jsonNode = objectMapper.readTree(textMessage.getPayload());
+            HashMap<String, Object> message = objectMapper.convertValue(jsonNode, HashMap.class);
+            producer.sendMessage(topicName, message);
+        }
     }
 }

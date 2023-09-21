@@ -1,92 +1,73 @@
 package com.worker.worker.socket.upbit;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.worker.global.util.enums.SiseType;
-import com.worker.global.util.json.JsonUtil;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worker.worker.producer.KafkaProducer;
-import lombok.Data;
-import okhttp3.Response;
-import okhttp3.WebSocket;
-import okhttp3.WebSocketListener;
-import okio.ByteString;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import com.worker.worker.socket.upbit.request.UpbitCodeRequest;
+import com.worker.worker.socket.upbit.request.UpbitTicketRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.web.socket.CloseStatus;
+import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.WebSocketSession;
+import org.springframework.web.socket.handler.TextWebSocketHandler;
 
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CountDownLatch;
 
 @Component
-public class UpbitWebSocketListener extends WebSocketListener {
+public class UpbitWsListener extends TextWebSocketHandler {
 
-    private static final int NORMAL_CLOSURE_STATUS = 1000;
-    private String json;
-    private SiseType siseType;
+    private final ObjectMapper objectMapper;
+    private final CountDownLatch closeLatch = new CountDownLatch(1);
     private final KafkaProducer producer;
+    @Value("${spring.kafka.topic.upbit}")
+    String topicName;
 
     @Autowired
-    public UpbitWebSocketListener(KafkaProducer producer) {
+    public UpbitWsListener(ObjectMapper objectMapper, KafkaProducer producer) {
+        this.objectMapper = objectMapper;
         this.producer = producer;
     }
 
     @Override
-    public void onClosed(@NotNull WebSocket webSocket, int code, @NotNull String reason) {
-        System.out.printf("Socket Closed : %s / %s\r\n", code, reason);
+    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
+        try {
+            session.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        closeLatch.countDown();
     }
 
     @Override
-    public void onClosing(@NotNull WebSocket webSocket, int code, @NotNull String reason) {
-        System.out.printf("Socket Closing : %s / %s\n", code, reason);
-        webSocket.close(NORMAL_CLOSURE_STATUS, null);
-        webSocket.cancel();
+    public void afterConnectionEstablished(WebSocketSession session) {
+        UpbitTicketRequest ticket =
+                UpbitTicketRequest.builder()
+                        .ticket(UUID.randomUUID().toString())
+                        .build();
+
+        UpbitCodeRequest code =
+                UpbitCodeRequest.builder()
+                        .type("ticker")
+                        .codes(List.of())
+                        .build();
+        try {
+            session.sendMessage(new TextMessage(objectMapper.writeValueAsString(List.of(ticket, code))));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
-    public void onFailure(@NotNull WebSocket webSocket, @NotNull Throwable t, @Nullable Response response) {
-        System.out.println("Socket Error : " + t.getMessage());
-    }
-
-    @Override
-    public void onMessage(@NotNull WebSocket webSocket, @NotNull String text) {
-        JsonNode jsonNode = JsonUtil.fromJson(text, JsonNode.class);
-//        System.out.println(jsonNode.toPrettyString());
-    }
-
-    @Override
-    public void onMessage(@NotNull WebSocket webSocket, @NotNull ByteString bytes) {
-        HashMap<String, Object> message = JsonUtil.fromJson(bytes.string(StandardCharsets.UTF_8), HashMap.class);
-        producer.sendMessage(message);
-    }
-
-    @Override
-    public void onOpen(@NotNull WebSocket webSocket, @NotNull Response response) {
-        webSocket.send(getParameter());
-//        webSocket.close(NORMAL_CLOSURE_STATUS, null); // 없을 경우 끊임없이 서버와 통신함
-    }
-
-    public void setParameter(SiseType siseType, List<String> codes) {
-        this.siseType = siseType;
-        this.json = JsonUtil.toJson(List.of(Ticket.of(UUID.randomUUID().toString()), Type.of(siseType, codes)));
-    }
-
-    private String getParameter() {
-        return this.json;
-    }
-
-    @Data(staticConstructor = "of")
-    private static class Ticket {
-        private final String ticket;
-    }
-
-    @Data(staticConstructor = "of")
-    private static class Type {
-        private final SiseType type;
-        private final List<String> codes; // market
-        private Boolean isOnlySnapshot = false;
-        private Boolean isOnlyRealtime = true;
+    public void handleTextMessage(WebSocketSession session, TextMessage textMessage) throws JsonProcessingException {
+        JsonNode jsonNode = objectMapper.readTree(textMessage.getPayload());
+        HashMap<String, Object> message = objectMapper.convertValue(jsonNode, HashMap.class);
+        producer.sendMessage(topicName, message);
     }
 }

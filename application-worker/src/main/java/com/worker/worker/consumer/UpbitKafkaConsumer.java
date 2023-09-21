@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 
 @Service
-public class KafkaConsumer {
+public class UpbitKafkaConsumer {
     @KafkaListener(topics = "${spring.kafka.topic.upbit}", groupId = "${spring.kafka.consumer.group-id}")
     public void consume(HashMap<String, Object> data){
         System.out.println(data);

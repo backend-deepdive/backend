@@ -7,16 +7,13 @@ import lombok.Setter;
 import java.util.List;
 
 @Setter
-public class UpbitRequest {
-    @JsonProperty("ticket")
-    private String ticket;
+public class UpbitCodeRequest {
     @JsonProperty("type")
     private String type;
     @JsonProperty("codes")
     private List<String> codes;
     @Builder
-    public UpbitRequest(String ticket, String type, List<String> codes) {
-        this.ticket = ticket;
+    public UpbitCodeRequest(String type, List<String> codes) {
         this.type = type;
         this.codes = codes;
     }
