@@ -46,24 +46,20 @@ public class BithumbWsListener extends TextWebSocketHandler {
     @Override
     public void afterConnectionEstablished(WebSocketSession session) {
         // transaction (체결) 코드
-//        BithumbRequest request =
-//                BithumbRequest.builder()
+        BithumbRequest request =
+                BithumbRequest.builder()
+                        .type("transaction")
+                        .symbols(List.of("BTC_KRW" , "ETH_KRW"))
+                        .build();
+//        BithumbTickerRequest request =
+//                BithumbTickerRequest.builder()
 //                        .type("transaction")
 //                        .symbols(List.of("BTC_KRW" , "ETH_KRW"))
 //                        .build();
-        BithumbTickerRequest request =
-                BithumbTickerRequest.builder()
-                        .type("ticker")
-                        .symbols(List.of("BTC_KRW" , "ETH_KRW"))
-                        .build();
         try {
             // 응답 {resmsg=Invalid Filter Syntax, status=5100} 이면 보내는 로직으로 수정되어야 함.
             session.sendMessage(new TextMessage(objectMapper.writeValueAsString(request)));
         } catch (Exception e) {
-            System.out.println("exception@@@@@@@@");
-            System.out.println(e);
-            System.out.println(e.getMessage());
-            System.out.println("@@@@@@@@exception");
             e.printStackTrace();
         }
     }

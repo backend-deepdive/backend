@@ -21,6 +21,6 @@ public class BithumbKafkaConsumer {
         System.out.println("Consumer@@@@@@@@@@@@");
         System.out.println(data);
         System.out.println("@@@@@@@@@@@@Consumer");
-//        proxyJpaInterface.save(Exchange.BITHUMB, data);
+        proxyJpaInterface.save(Exchange.BITHUMB, data);
     }
 }
