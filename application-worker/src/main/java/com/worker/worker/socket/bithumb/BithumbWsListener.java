@@ -1,11 +1,12 @@
 package com.worker.worker.socket.bithumb;
 
+import com.core.Exchange;
+import com.domain.global.ProxyJpaInterface;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.worker.worker.producer.KafkaProducer;
 import com.worker.worker.socket.bithumb.request.BithumbRequest;
-import com.worker.worker.socket.bithumb.request.BithumbTickerRequest;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -19,19 +20,21 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 @Component
+@RequiredArgsConstructor
 public class BithumbWsListener extends TextWebSocketHandler {
 
     private final ObjectMapper objectMapper;
     private final CountDownLatch closeLatch = new CountDownLatch(1);
-    private final KafkaProducer producer;
+    private final ProxyJpaInterface proxyJpaInterface;
+
     @Value("${spring.kafka.topic.bithumb}")
     String topicName;
 
-    @Autowired
-    public BithumbWsListener(ObjectMapper objectMapper, KafkaProducer producer) {
-        this.objectMapper = objectMapper;
-        this.producer = producer;
-    }
+//    @Autowired
+//    public BithumbWsListener(ObjectMapper objectMapper, KafkaProducer producer) {
+//        this.objectMapper = objectMapper;
+//        this.producer = producer;
+//    }
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
@@ -68,6 +71,14 @@ public class BithumbWsListener extends TextWebSocketHandler {
     public void handleTextMessage(WebSocketSession session, TextMessage textMessage) throws JsonProcessingException {
         JsonNode jsonNode = objectMapper.readTree(textMessage.getPayload());
         HashMap<String, Object> message = objectMapper.convertValue(jsonNode, HashMap.class);
-        producer.sendMessage(topicName, message);
+//        producer.sendMessage(topicName, message); // Kafka 통해서 작동하는 로직 주석
+        System.out.println("Listener@@@@@@@@@@@@@@@@");
+        System.out.println(message);
+        System.out.println("@@@@@@@@@@@@@@@@Listener");
+        try {
+            proxyJpaInterface.save(Exchange.BITHUMB, message);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
