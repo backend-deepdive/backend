@@ -20,24 +20,24 @@ public class Ticker {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable = false)
+//    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Exchange exchange;
-    @Column(nullable = false)
+//    @Column(nullable = false)
     private String market;
-    @Column(nullable = false)
+//    @Column(nullable = false)
     private Double openPrice;
-    @Column(nullable = false)
+//    @Column(nullable = false)
     private Double highPrice;
-    @Column(nullable = false)
+//    @Column(nullable = false)
     private Double lowPrice;
-    @Column(nullable = false)
+//    @Column(nullable = false)
     private Double prevClosingPrice;
-    @Column(nullable = false)
+//    @Column(nullable = false)
     private Double accTradeVolume;
-    @Column(nullable = false)
+//    @Column(nullable = false)
     private Double accTradePrice;
-    @Column(nullable = false)
+//    @Column(nullable = false)
     private LocalDateTime incomeDatetime;
 
     @Builder

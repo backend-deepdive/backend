@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worker.worker.producer.KafkaProducer;
 import com.worker.worker.socket.bithumb.request.BithumbRequest;
+import com.worker.worker.socket.bithumb.request.BithumbTickerRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -44,8 +45,14 @@ public class BithumbWsListener extends TextWebSocketHandler {
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) {
-        BithumbRequest request =
-                BithumbRequest.builder()
+        // transaction (체결) 코드
+//        BithumbRequest request =
+//                BithumbRequest.builder()
+//                        .type("transaction")
+//                        .symbols(List.of("BTC_KRW" , "ETH_KRW"))
+//                        .build();
+        BithumbTickerRequest request =
+                BithumbTickerRequest.builder()
                         .type("ticker")
                         .symbols(List.of("BTC_KRW" , "ETH_KRW"))
                         .build();
@@ -53,17 +60,18 @@ public class BithumbWsListener extends TextWebSocketHandler {
             // 응답 {resmsg=Invalid Filter Syntax, status=5100} 이면 보내는 로직으로 수정되어야 함.
             session.sendMessage(new TextMessage(objectMapper.writeValueAsString(request)));
         } catch (Exception e) {
+            System.out.println("exception@@@@@@@@");
+            System.out.println(e);
+            System.out.println(e.getMessage());
+            System.out.println("@@@@@@@@exception");
             e.printStackTrace();
         }
     }
 
     @Override
     public void handleTextMessage(WebSocketSession session, TextMessage textMessage) throws JsonProcessingException {
-        String payload = textMessage.getPayload();
-        if(payload.contains("status")) {
-            JsonNode jsonNode = objectMapper.readTree(textMessage.getPayload());
-            HashMap<String, Object> message = objectMapper.convertValue(jsonNode, HashMap.class);
-            producer.sendMessage(topicName, message);
-        }
+        JsonNode jsonNode = objectMapper.readTree(textMessage.getPayload());
+        HashMap<String, Object> message = objectMapper.convertValue(jsonNode, HashMap.class);
+        producer.sendMessage(topicName, message);
     }
 }

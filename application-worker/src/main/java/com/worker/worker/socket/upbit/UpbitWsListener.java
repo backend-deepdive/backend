@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worker.worker.producer.KafkaProducer;
 import com.worker.worker.socket.upbit.request.UpbitCodeRequest;
 import com.worker.worker.socket.upbit.request.UpbitTicketRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -21,6 +22,7 @@ import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 
 @Component
+@Slf4j
 public class UpbitWsListener extends TextWebSocketHandler {
 
     private final ObjectMapper objectMapper;
@@ -66,8 +68,13 @@ public class UpbitWsListener extends TextWebSocketHandler {
 
     @Override
     public void handleTextMessage(WebSocketSession session, TextMessage textMessage) throws JsonProcessingException {
-        JsonNode jsonNode = objectMapper.readTree(textMessage.getPayload());
-        HashMap<String, Object> message = objectMapper.convertValue(jsonNode, HashMap.class);
-        producer.sendMessage(topicName, message);
+        String ss = textMessage.getPayload();
+        if(ss.contains("status")) {
+            JsonNode jsonNode = objectMapper.readTree(textMessage.getPayload());
+            HashMap<String, Object> message = objectMapper.convertValue(jsonNode, HashMap.class);
+            log.info(String.valueOf(message));
+//        producer.sendMessage(topicName, message);
+        }
+
     }
 }
