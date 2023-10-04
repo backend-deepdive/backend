@@ -55,8 +55,10 @@ public class UpbitWsListener extends TextWebSocketHandler {
         UpbitCodeRequest code =
                 UpbitCodeRequest.builder()
                         .type("ticker")
-                        .codes(List.of())
+                        .codes(List.of("KRW-BTC", "KRW-ETH"))
                         .build();
+
+
         try {
             session.sendMessage(new TextMessage(objectMapper.writeValueAsString(List.of(ticket, code))));
         } catch (Exception e) {
@@ -68,6 +70,7 @@ public class UpbitWsListener extends TextWebSocketHandler {
     public void handleTextMessage(WebSocketSession session, TextMessage textMessage) throws JsonProcessingException {
         JsonNode jsonNode = objectMapper.readTree(textMessage.getPayload());
         HashMap<String, Object> message = objectMapper.convertValue(jsonNode, HashMap.class);
-        producer.sendMessage(topicName, message);
+        System.out.println(message);
+//        producer.sendMessage(topicName, message);
     }
 }

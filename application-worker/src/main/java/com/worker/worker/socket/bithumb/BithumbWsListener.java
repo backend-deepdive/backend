@@ -44,13 +44,19 @@ public class BithumbWsListener extends TextWebSocketHandler {
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) {
+        /*
+        * request 스팩 정의
+        * type: ticker, transaction, orderbookdepth
+        * symbols: List.of([COIN]_KRW)
+        * tickTypes: ticker 일때만 필요한 파라미터
+        * */
         BithumbRequest request =
                 BithumbRequest.builder()
                         .type("ticker")
                         .symbols(List.of("BTC_KRW" , "ETH_KRW"))
+                        .tickTypes(List.of("1H"))
                         .build();
         try {
-            // 응답 {resmsg=Invalid Filter Syntax, status=5100} 이면 보내는 로직으로 수정되어야 함.
             session.sendMessage(new TextMessage(objectMapper.writeValueAsString(request)));
         } catch (Exception e) {
             e.printStackTrace();
@@ -60,10 +66,14 @@ public class BithumbWsListener extends TextWebSocketHandler {
     @Override
     public void handleTextMessage(WebSocketSession session, TextMessage textMessage) throws JsonProcessingException {
         String payload = textMessage.getPayload();
-        if(payload.contains("status")) {
+        if(!payload.contains("status")) {
             JsonNode jsonNode = objectMapper.readTree(textMessage.getPayload());
             HashMap<String, Object> message = objectMapper.convertValue(jsonNode, HashMap.class);
-            producer.sendMessage(topicName, message);
+
+            JsonNode contentNode = jsonNode.get("content");
+            HashMap<String, Object> content = objectMapper.convertValue(contentNode, HashMap.class);
+
+            producer.sendMessage(topicName, content);
         }
     }
 }

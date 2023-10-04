@@ -5,11 +5,8 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.worker.global.util.enums.EnumInterface;
-import com.worker.global.util.enums.EnumSerializer;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
@@ -77,15 +74,8 @@ public class JsonUtil {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         objectMapper.registerModule(new JavaTimeModule());
-        objectMapper.registerModule(new EnumModule());
         objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         return objectMapper;
-    }
-
-    private static class EnumModule extends SimpleModule {
-        public EnumModule() {
-            addSerializer(EnumInterface.class, new EnumSerializer());
-        }
     }
 
 }

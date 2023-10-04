@@ -20,37 +20,20 @@ public class Ticker {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Exchange exchange;
-    @Column(nullable = false)
     private String market;
-    @Column(nullable = false)
     private Double openPrice;
-    @Column(nullable = false)
     private Double highPrice;
-    @Column(nullable = false)
     private Double lowPrice;
-    @Column(nullable = false)
     private Double prevClosingPrice;
-    @Column(nullable = false)
     private Double accTradeVolume;
-    @Column(nullable = false)
     private Double accTradePrice;
-    @Column(nullable = false)
     private LocalDateTime incomeDatetime;
 
     @Builder
-    public Ticker(Exchange exchange, String market, Double openPrice, Double highPrice, Double lowPrice, Double prevClosingPrice, Double accTradeVolume, Double accTradePrice, LocalDateTime incomeDatetime) {
+    public Ticker(Exchange exchange) {
         this.exchange = exchange;
-        this.market = market;
-        this.openPrice = openPrice;
-        this.highPrice = highPrice;
-        this.lowPrice = lowPrice;
-        this.prevClosingPrice = prevClosingPrice;
-        this.accTradeVolume = accTradeVolume;
-        this.accTradePrice = accTradePrice;
-        this.incomeDatetime = incomeDatetime;
     }
 
     public static Ticker toEntity(Exchange exchange, HashMap<String, Object> data) {
@@ -58,7 +41,7 @@ public class Ticker {
                 Ticker.builder()
                         .exchange(exchange)
                         .build();
-        System.out.println(data);
+
 
         data.forEach((key, value) -> {
             switch (key) {
@@ -71,7 +54,7 @@ public class Ticker {
                     ticker.setMarket((String) value);
                     break;
                 case "opening_price":
-                case "openPrice:":
+                case "openPrice":
                     ticker.setOpenPrice(Double.parseDouble((String) value));
                     break;
                 case "high_price":
@@ -103,12 +86,13 @@ public class Ticker {
                     ticker.setIncomeDatetime(incomeDateTime);
                     break;
                 case "date":
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
                     LocalDateTime localDateTime = LocalDateTime.parse(value + (String) data.get("time"), formatter);
                     ticker.setIncomeDatetime(localDateTime);
                 default: break;
             }
         });
+
         return ticker;
     }
 }
