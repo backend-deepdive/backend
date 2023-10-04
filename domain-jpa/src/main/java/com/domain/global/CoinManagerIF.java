@@ -4,6 +4,6 @@ import com.core.Exchange;
 
 import java.util.HashMap;
 
-public interface ProxyJpaInterface {
+public interface CoinManagerIF {
     void save(Exchange exchange, HashMap<String, Object> data);
 }

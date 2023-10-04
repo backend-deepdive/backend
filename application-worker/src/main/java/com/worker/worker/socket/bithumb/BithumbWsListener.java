@@ -52,9 +52,9 @@ public class BithumbWsListener extends TextWebSocketHandler {
         * */
         BithumbRequest request =
                 BithumbRequest.builder()
-                        .type("ticker")
+                        .type("transaction")
                         .symbols(List.of("BTC_KRW" , "ETH_KRW"))
-                        .tickTypes(List.of("1H"))
+//                        .tickTypes(List.of("1H"))
                         .build();
         try {
             session.sendMessage(new TextMessage(objectMapper.writeValueAsString(request)));
@@ -70,10 +70,38 @@ public class BithumbWsListener extends TextWebSocketHandler {
             JsonNode jsonNode = objectMapper.readTree(textMessage.getPayload());
             HashMap<String, Object> message = objectMapper.convertValue(jsonNode, HashMap.class);
 
-            JsonNode contentNode = jsonNode.get("content");
-            HashMap<String, Object> content = objectMapper.convertValue(contentNode, HashMap.class);
+            /*
+             * response 로직 정리
+             * type: ticker, transaction, orderbookdepth
+             * */
+            String type = jsonNode.get("type").asText();
+            HashMap<String, Object> content = null;
 
-            producer.sendMessage(topicName, content);
+            switch (type) {
+                case "ticker":
+                    JsonNode contentNode = jsonNode.get("content");
+                    content = objectMapper.convertValue(contentNode, HashMap.class);
+                    content.put("type", jsonNode.get("type").asText());
+                    producer.sendMessage(topicName, content);
+                    break;
+
+                case "transaction":
+                    JsonNode contentNode2 = jsonNode.get("content");
+                    if (contentNode2 != null) {
+                        JsonNode listNode = contentNode2.get("list");
+                        if (listNode != null && listNode.isArray()) {
+                            for(JsonNode itemNode : listNode) {
+                                content = objectMapper.convertValue(itemNode, HashMap.class);
+                                content.put("type", jsonNode.get("type").asText());
+                                producer.sendMessage(topicName, content);
+                            }
+                        }
+                    }
+                    break;
+
+                case "orderbookdepth":
+                    break;
+            }
         }
     }
 }
