@@ -1,7 +1,10 @@
 rootProject.name = 'stockcoin'
-include 'application-api'
-include 'application-worker'
-include 'domain-jpa'
 include 'application'
+include 'application-api'
+include 'application-socket'
+include 'kafka-brokers'
+include 'domain-jpa'
 include 'core'
+
+
 

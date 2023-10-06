@@ -1,4 +1,4 @@
-package com.worker.worker.socket.bithumb.request;
+package com.socket.client.bithumb.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;

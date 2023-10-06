@@ -1,4 +1,4 @@
-package com.worker.worker.socket.bithumb;
+package com.socket.client.bithumb;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,7 +13,7 @@ public class BithumbWsClient {
     @Autowired
     public BithumbWsClient(BithumbWsListener bithumbWsListener) {
         this.bithumbWsListener = bithumbWsListener;
-//        connect();
+        connect();
     }
 
     public void connect() {

@@ -1,10 +1,10 @@
-package com.worker.worker.socket.bithumb;
+package com.socket.client.bithumb;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worker.worker.producer.KafkaProducer;
-import com.worker.worker.socket.bithumb.request.BithumbRequest;
+import com.socket.client.bithumb.request.BithumbRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;

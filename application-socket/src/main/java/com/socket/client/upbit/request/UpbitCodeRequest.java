@@ -1,4 +1,4 @@
-package com.worker.worker.socket.upbit.request;
+package com.socket.client.upbit.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;

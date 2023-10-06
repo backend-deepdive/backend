@@ -1,4 +1,4 @@
-package com.worker.worker.socket.upbit;
+package com.socket.client.upbit;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;

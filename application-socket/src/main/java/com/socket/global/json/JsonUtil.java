@@ -1,4 +1,4 @@
-package com.worker.global.util.json;
+package com.socket.global.json;
 
 
 import com.fasterxml.jackson.databind.DeserializationFeature;

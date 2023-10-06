@@ -1,10 +1,10 @@
-package com.worker.worker.socket.upbit;
+package com.socket.client.upbit;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.worker.global.util.json.JsonUtil;
+import com.socket.global.json.JsonUtil;
 import com.worker.worker.producer.KafkaProducer;
-import com.worker.worker.socket.upbit.request.UpbitCodeRequest;
-import com.worker.worker.socket.upbit.request.UpbitTicketRequest;
+import com.socket.client.upbit.request.UpbitCodeRequest;
+import com.socket.client.upbit.request.UpbitTicketRequest;
 import okhttp3.Response;
 import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
