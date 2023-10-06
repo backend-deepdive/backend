@@ -1,4 +1,4 @@
-package com.api.coin.upbit.controller.dto;
+package com.api.client.upbit.controller.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;

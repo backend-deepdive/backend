@@ -1,6 +1,6 @@
-package com.api.coin.bithumb.controller;
+package com.api.client.bithumb.controller;
 
-import com.api.coin.upbit.service.UpbitService;
+import com.api.client.upbit.service.UpbitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;

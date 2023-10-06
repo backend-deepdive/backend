@@ -4,6 +4,7 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
     implementation project(':domain-jpa')
+    implementation project(':core')
 }
 
 bootJar {enabled = false}

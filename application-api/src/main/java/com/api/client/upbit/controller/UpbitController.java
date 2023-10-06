@@ -1,7 +1,7 @@
-package com.api.coin.upbit.controller;
+package com.api.client.upbit.controller;
 
-import com.api.coin.upbit.controller.dto.MarketInfo;
-import com.api.coin.upbit.service.UpbitService;
+import com.api.client.upbit.controller.dto.MarketInfo;
+import com.api.client.upbit.service.UpbitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
