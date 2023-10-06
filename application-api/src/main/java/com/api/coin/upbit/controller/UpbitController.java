@@ -26,7 +26,24 @@ public class UpbitController {
     @GetMapping(value = "/market", produces = MediaType.APPLICATION_JSON_VALUE)
     public void updateAllMarkets() {
         Flux<MarketInfo> markets =  getAllMarkets();
-        System.out.println(markets);
+
+        markets
+            .subscribe(
+                marketInfo -> {
+                    System.out.println(marketInfo.getMarket());
+                    System.out.println(marketInfo.getEnglishName());
+                    System.out.println("-----------");
+                },
+                throwable -> {
+                    // 에러 처리 로직
+                    System.err.println("Error: " + throwable.getMessage());
+                },
+                () -> {
+                    // Flux가 완료되면 호출되는 로직
+                    System.out.println("Processing completed.");
+                }
+            );
+
 //        upbitService.saveAllMarket(markets);
     }
 

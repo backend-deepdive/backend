@@ -10,11 +10,6 @@ public class UpbitCodeRequest {
     private String type;
     @JsonProperty("codes")
     private List<String> codes;
-    @JsonProperty("isOnlySnapshot")
-    private final Boolean isOnlySnapshot = false;
-    @JsonProperty("isOnlyRealtime")
-    private final Boolean isOnlyRealtime = true;
-
     @Builder
     public UpbitCodeRequest(String type, List<String> codes) {
         this.type = type;

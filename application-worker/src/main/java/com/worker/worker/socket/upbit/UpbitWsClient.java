@@ -1,32 +1,31 @@
 package com.worker.worker.socket.upbit;
 
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.socket.client.WebSocketConnectionManager;
-import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 
 @Service
 public class UpbitWsClient {
     private final UpbitWsListener upbitWsListener;
     private final String socketPath = "wss://api.upbit.com/websocket/v1";
-
     @Autowired
     public UpbitWsClient(UpbitWsListener upbitWsListener) {
         this.upbitWsListener = upbitWsListener;
-//        connect();
+        connect();
     }
 
     public void connect() {
-        StandardWebSocketClient client = new StandardWebSocketClient();
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(socketPath)
+                .build();
         try {
-            client.setTaskExecutor(client.getTaskExecutor());
-            WebSocketConnectionManager manager = new WebSocketConnectionManager(
-                    client,
-                    upbitWsListener,
-                    socketPath
-            );
-            manager.setAutoStartup(true);
-            manager.start();
+            client.newWebSocket(request, upbitWsListener);
+
+            client.dispatcher()
+                  .executorService()
+                  .shutdown();
         } catch (Exception e) {
             e.printStackTrace();
         }

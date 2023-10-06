@@ -41,8 +41,6 @@ public class Ticker {
                 Ticker.builder()
                         .exchange(exchange)
                         .build();
-
-
         data.forEach((key, value) -> {
             switch (key) {
                 /* key 순서
@@ -51,31 +49,31 @@ public class Ticker {
                 * */
                 case "code":
                 case "symbol":
-                    ticker.setMarket((String) value);
+                    ticker.setMarket(value.toString());
                     break;
                 case "opening_price":
                 case "openPrice":
-                    ticker.setOpenPrice(Double.parseDouble((String) value));
+                    ticker.setOpenPrice(Double.parseDouble(value.toString()));
                     break;
                 case "high_price":
                 case "highPrice":
-                    ticker.setHighPrice(Double.parseDouble((String) value));
+                    ticker.setHighPrice(Double.parseDouble(value.toString()));
                     break;
                 case "low_price":
                 case "lowPrice":
-                    ticker.setLowPrice(Double.parseDouble((String) value));
+                    ticker.setLowPrice(Double.parseDouble(value.toString()));
                     break;
                 case "prev_closing_price":
                 case "prevClosePrice":
-                    ticker.setPrevClosingPrice(Double.parseDouble((String) value));
+                    ticker.setPrevClosingPrice(Double.parseDouble(value.toString()));
                     break;
                 case "acc_trade_volume":
                 case "volume":
-                    ticker.setAccTradeVolume(Double.parseDouble((String) value));
+                    ticker.setAccTradeVolume(Double.parseDouble(value.toString()));
                     break;
                 case "acc_trade_price":
                 case "value":
-                    ticker.setAccTradePrice(Double.parseDouble((String) value));
+                    ticker.setAccTradePrice(Double.parseDouble(value.toString()));
                     break;
                 case "timestamp":
                     LocalDateTime incomeDateTime =

@@ -10,6 +10,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -30,6 +31,15 @@ public class JsonUtil {
     }
 
     public static <T> T fromJson(String json, Class<T> classType) {
+        if (json == null) return null;
+        try {
+            return objectMapper().treeToValue(objectMapper().readTree(json), classType);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static HashMap<String, Object> toJson(String json, Class<HashMap> classType) {
         if (json == null) return null;
         try {
             return objectMapper().treeToValue(objectMapper().readTree(json), classType);
@@ -77,5 +87,4 @@ public class JsonUtil {
         objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         return objectMapper;
     }
-
 }
