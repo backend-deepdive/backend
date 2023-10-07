@@ -56,6 +56,7 @@ public class UpbitWsListener extends WebSocketListener {
     /*
     * bithumb과 동일한 코드를 사용할 수 없는 이유는 socket으로 부터 수신되는 데이터가 bithumb은 String type,
     * Upbit은 ByteString type으로 들어오는데 타입간의 차이때문에 socket에 직접적으로 접근하는 okHttp 클래스를 사용함.
+    *
     * */
     @Override
     public void onMessage(@NotNull WebSocket webSocket, @NotNull ByteString bytes) {
