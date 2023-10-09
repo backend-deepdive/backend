@@ -12,7 +12,7 @@ public class UpbitWsClient {
     @Autowired
     public UpbitWsClient(UpbitWsListener upbitWsListener) {
         this.upbitWsListener = upbitWsListener;
-//        connect();
+        connect();
     }
 
     public void connect() {

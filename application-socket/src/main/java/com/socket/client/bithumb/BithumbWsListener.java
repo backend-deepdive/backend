@@ -105,7 +105,6 @@ public class BithumbWsListener extends TextWebSocketHandler {
                     if (contentNode3 != null) {
                         content = JsonUtil.toJson(contentNode3.toString(), HashMap.class);
                         content.put("type", jsonNode.get("type").asText());
-                        System.out.println(content);
                         producer.sendMessage(topicName, content);
                     }
                     break;
