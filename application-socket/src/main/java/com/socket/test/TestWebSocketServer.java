@@ -2,10 +2,11 @@ package com.socket.test;
 
 
 
+import com.core.Exchange;
+import com.domain.global.CoinManagerIF;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.worker.worker.producer.KafkaProducer;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -24,7 +25,9 @@ import org.springframework.web.socket.*;
 public class TestWebSocketServer implements WebSocketHandler {
     private final ObjectMapper objectMapper;
     private CountDownLatch closeLatch = new CountDownLatch(1);
-    private final KafkaProducer producer;
+//    private final KafkaProducer producer;
+    private final CoinManagerIF coinManagerIF;
+
 //    @Value("${spring.kafka.topic.bithumb}")
     String topicName = "topic-bithumb";
 //    private List<WebSocketSession> sessions = new CopyOnWriteArrayList<>();
@@ -67,7 +70,7 @@ public class TestWebSocketServer implements WebSocketHandler {
                     JsonNode contentNode = jsonNode.get("content");
                     content = objectMapper.convertValue(contentNode, HashMap.class);
                     content.put("type", jsonNode.get("type").asText());
-                    producer.sendMessage(topicName, content);
+//                    producer.sendMessage(topicName, content);
                     break;
 
                 case "transaction":
@@ -81,7 +84,12 @@ public class TestWebSocketServer implements WebSocketHandler {
 //                                System.out.println("@@@@@@@@@@@@@@");
 //                                System.out.println(content);
 //                                System.out.println("@@@@@@@@@@@@@@");
-                                producer.sendMessage(topicName, content);
+//                                producer.sendMessage(topicName, content);
+                                try{
+                                    coinManagerIF.save(Exchange.BITHUMB,content);
+                                } catch (Exception e){
+                                    e.printStackTrace();
+                                }
                             }
                         }
                     }

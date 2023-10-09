@@ -1,7 +1,7 @@
 package com.socket.test;
 
+import com.domain.global.CoinManagerIF;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.worker.worker.producer.KafkaProducer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -17,7 +17,7 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 public class WebSocketConfig implements WebSocketConfigurer {
 
     private final ObjectMapper objectMapper;
-    private final KafkaProducer kafkaProducer;
+    private final CoinManagerIF coinManagerIF;
 
 //    @Bean
 //    public TestWebSocketServer testWebSocketServer() {
@@ -26,7 +26,7 @@ public class WebSocketConfig implements WebSocketConfigurer {
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(new TestWebSocketServer(objectMapper,kafkaProducer), "/wwss");
+        registry.addHandler(new TestWebSocketServer(objectMapper,coinManagerIF), "/wwss");
     }
 }
 
