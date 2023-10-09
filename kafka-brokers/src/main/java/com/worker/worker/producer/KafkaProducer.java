@@ -20,6 +20,10 @@ public class KafkaProducer {
                 .withPayload(data)
                 .setHeader(KafkaHeaders.TOPIC, topicName)
                 .build();
+//
+//        System.out.println("@@@@@@@@@@@@@@");
+//        System.out.println(message);
+//        System.out.println("@@@@@@@@@@@@@@");
         kafkaTemplate.send(message);
     }
 }

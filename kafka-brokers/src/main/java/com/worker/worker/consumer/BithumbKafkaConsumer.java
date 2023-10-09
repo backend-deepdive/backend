@@ -14,6 +14,9 @@ public class BithumbKafkaConsumer {
     private final CoinManagerIF coinManagerInterface;
     @KafkaListener(topics = "${spring.kafka.topic.bithumb}", groupId = "${spring.kafka.consumer.group-id}")
     public void consume(HashMap<String, Object> data){
+        System.out.println("@@@@@@@@@@@@@@");
+        System.out.println(data);
+        System.out.println("@@@@@@@@@@@@@@");
         coinManagerInterface.save(Exchange.BITHUMB, data);
     }
 }
