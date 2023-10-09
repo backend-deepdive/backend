@@ -2,6 +2,7 @@ package com.api.client.upbit.controller;
 
 import com.api.client.upbit.controller.dto.MarketInfo;
 import com.api.client.upbit.service.UpbitService;
+import com.core.Exchange;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,6 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/upbit")
@@ -26,25 +30,20 @@ public class UpbitController {
     @GetMapping(value = "/market", produces = MediaType.APPLICATION_JSON_VALUE)
     public void updateAllMarkets() {
         Flux<MarketInfo> markets =  getAllMarkets();
-
+        List<String> codes = new ArrayList<>();
         markets
             .subscribe(
                 marketInfo -> {
-                    System.out.println(marketInfo.getMarket());
-                    System.out.println(marketInfo.getEnglishName());
-                    System.out.println("-----------");
+                    codes.add(marketInfo.getMarket());
                 },
                 throwable -> {
                     // 에러 처리 로직
                     System.err.println("Error: " + throwable.getMessage());
                 },
                 () -> {
-                    // Flux가 완료되면 호출되는 로직
-                    System.out.println("Processing completed.");
+                    upbitService.save(Exchange.UPBIT, codes);
                 }
             );
-
-//        upbitService.saveAllMarket(markets);
     }
 
     private Flux<MarketInfo> getAllMarkets() {

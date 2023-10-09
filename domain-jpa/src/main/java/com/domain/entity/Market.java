@@ -1,5 +1,6 @@
 package com.domain.entity;
 
+import com.core.Exchange;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -12,17 +13,14 @@ public class Market {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Exchange exchange;
+    @Column(nullable = false, unique = true)
     private String market;
-    @Column(nullable = false)
-    private String koreanName;
-    @Column(nullable = false)
-    private String englishName;
 
     @Builder
-    public Market(String market, String koreanName, String englishName) {
+    public Market(Exchange exchange, String market) {
+        this.exchange = exchange;
         this.market = market;
-        this.koreanName = koreanName;
-        this.englishName = englishName;
     }
 }
