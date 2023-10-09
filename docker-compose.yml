@@ -31,8 +31,8 @@ services:
       MYSQL_DATABASE: stockcoin
       MYSQL_ROOT_PASSWORD: stockcoin
       MYSQL_ROOT_HOST: "%"
-    volumes:
-      - ./backup-mysqldb:/var/lib/mysql
+#    volumes:
+#      - ./backup-mysqldb:/var/lib/mysql
     networks:
       - default
       - app-tier

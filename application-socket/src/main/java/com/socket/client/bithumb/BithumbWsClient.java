@@ -8,7 +8,8 @@ import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 @Service
 public class BithumbWsClient {
     private final BithumbWsListener bithumbWsListener;
-    private final String socketPath = "wss://pubwss.bithumb.com/pub/ws";
+//    private final String socketPath = "wss://pubwss.bithumb.com/pub/ws";
+    private final String socketPath = "";
 
     @Autowired
     public BithumbWsClient(BithumbWsListener bithumbWsListener) {

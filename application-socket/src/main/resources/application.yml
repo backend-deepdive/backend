@@ -1,0 +1,23 @@
+spring:
+  main:
+    allow-bean-definition-overriding: true
+
+
+  kafka:
+    consumer:
+      bootstrap-servers: kafka1:9092,kafka2:9092,kafka3:9092
+      group-id: coin
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+
+    producer:
+      bootstrap-servers: kafka1:9092,kafka2:9092,kafka3:9092
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+    topic:
+      upbit: topic-upbit
+      bithumb: topic-bithumb
