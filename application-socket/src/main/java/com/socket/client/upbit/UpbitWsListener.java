@@ -74,7 +74,7 @@ public class UpbitWsListener extends WebSocketListener {
 
         UpbitCodeRequest type =
                 UpbitCodeRequest.builder()
-                        .type("ticker")
+                        .type("orderbook")
                         .codes(List.of("KRW-BTC"))
                         .build();
         webSocket.send(JsonUtil.toJson(List.of(ticket, type)));

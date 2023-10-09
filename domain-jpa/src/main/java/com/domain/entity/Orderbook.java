@@ -8,27 +8,29 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Ticker {
+public class Orderbook {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Enumerated(EnumType.STRING)
     private Exchange exchange;
     private String market;
-    private Double openPrice;
-    private Double highPrice;
-    private Double lowPrice;
-    private Double prevClosingPrice;
-    private Double accTradeVolume;
-    private Double accTradePrice;
-    private LocalDateTime incomeDatetime;
+    @OneToMany(mappedBy = "orderBook", cascade = {CascadeType.ALL}, orphanRemoval = true)
+    private List<OrderBookUnit> orderBookUnits = new ArrayList<>();
+    private LocalDateTime datetime;
 
     @Builder
-    public Ticker(Exchange exchange) {
+    public Orderbook(Exchange exchange) {
         this.exchange = exchange;
+    }
+
+    public void addOrderBookUnits(OrderBookUnit orderBookUnit) {
+        this.orderBookUnits.add(orderBookUnit);
     }
 }

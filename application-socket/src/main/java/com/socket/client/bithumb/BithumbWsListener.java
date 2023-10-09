@@ -1,10 +1,10 @@
 package com.socket.client.bithumb;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.worker.worker.producer.KafkaProducer;
 import com.socket.client.bithumb.request.BithumbRequest;
+import com.socket.global.json.JsonUtil;
+import com.worker.worker.producer.KafkaProducer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -13,6 +13,7 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -52,7 +53,7 @@ public class BithumbWsListener extends TextWebSocketHandler {
         * */
         BithumbRequest request =
                 BithumbRequest.builder()
-                        .type("transaction")
+                        .type("orderbookdepth")
                         .symbols(List.of("BTC_KRW" , "ETH_KRW"))
 //                        .tickTypes(List.of("1H"))
                         .build();
@@ -64,7 +65,7 @@ public class BithumbWsListener extends TextWebSocketHandler {
     }
 
     @Override
-    public void handleTextMessage(WebSocketSession session, TextMessage textMessage) throws JsonProcessingException {
+    public void handleTextMessage(WebSocketSession session, TextMessage textMessage) throws IOException {
         String payload = textMessage.getPayload();
         if(!payload.contains("status")) {
             JsonNode jsonNode = objectMapper.readTree(textMessage.getPayload());
@@ -100,6 +101,13 @@ public class BithumbWsListener extends TextWebSocketHandler {
                     break;
 
                 case "orderbookdepth":
+                    JsonNode contentNode3 = jsonNode.get("content");
+                    if (contentNode3 != null) {
+                        content = JsonUtil.toJson(contentNode3.toString(), HashMap.class);
+                        content.put("type", jsonNode.get("type").asText());
+                        System.out.println(content);
+                        producer.sendMessage(topicName, content);
+                    }
                     break;
             }
         }

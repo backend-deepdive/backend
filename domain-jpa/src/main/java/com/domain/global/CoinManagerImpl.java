@@ -1,6 +1,7 @@
 package com.domain.global;
 
 import com.core.Exchange;
+import com.domain.service.OrderBookService;
 import com.domain.service.TickerService;
 import com.domain.service.TradeService;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,8 @@ import java.util.HashMap;
 public class CoinManagerImpl implements CoinManagerIF {
     private final TickerService tickerService;
     private final TradeService tradeService;
+    private final OrderBookService orderBookService;
+
     @Override
     public void save(Exchange exchange, HashMap<String, Object> data) {
         String type = data.get("type").toString();
@@ -25,8 +28,9 @@ public class CoinManagerImpl implements CoinManagerIF {
             case "transaction":
                 tradeService.save(exchange, data);
                 break;
-            case "overbook":
+            case "orderbook":
             case "orderbookdepth":
+                orderBookService.save(exchange, data);
                 break;
         }
     }
