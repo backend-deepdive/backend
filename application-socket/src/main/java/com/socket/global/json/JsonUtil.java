@@ -16,7 +16,6 @@ import java.util.Map;
 
 @Slf4j
 public class JsonUtil {
-
     private JsonUtil() {}
 
     private static ObjectMapper objectMapper = customObjectMapper();
