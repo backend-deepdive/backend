@@ -13,7 +13,7 @@ public class BithumbWsClient {
     @Autowired
     public BithumbWsClient(BithumbWsListener bithumbWsListener) {
         this.bithumbWsListener = bithumbWsListener;
-        connect();
+//        connect();
     }
 
     public void connect() {
